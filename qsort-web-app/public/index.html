@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Q-Sort</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <div id="opening-screen">
+        <h1>Welcome to the Q-Sort</h1>
+        <p>Please select your development team before proceeding:</p>
+        
+        <select id="team-selection">
+            <option value="">Select Your Team</option>
+        </select>
+        
+        <button id="proceed-btn">Proceed</button>
+    </div>
+
+    <div id="qsort-container" style="display: none;">
+        <h1>Q-Sort</h1>
+
+        <!-- Dropdown to Select Q-sort Version -->
+        <select id="qsort-version">
+            <option value="">Select Q-sort Version</option>
+        </select>
+        <div id="slot-container"></div>
+
+        <div id="sorting-area">
+            <div id="slot-container"></div>
+        </div>
+
+        <h2>Available Cards</h2>
+        <div id="card-container"></div>
+
+        <button id="submit-btn">Submit</button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
