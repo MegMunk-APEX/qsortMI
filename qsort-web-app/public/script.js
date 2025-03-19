@@ -69,7 +69,6 @@ function loadCards(version, team) {
                 cardDiv.innerHTML = `
                     <strong>${card.text}</strong><br>
                     <small>${card.details.MW} MW | ${card.details.Technology} | ${card.details["Sub-RTO"]}</small><br>
-                    <em>NTP: ${card.details.NTP ? card.details.NTP : "N/A"}</em>
                 `;
 
                 // Attach drag event listeners to the new cards
@@ -158,7 +157,6 @@ function createSlots(cardCount) {
     let totalSlots = Math.max(cardCount, 1); // ✅ Ensure at least as many slots as cards
     let rowSlots = 1; // ✅ Start with 1 slot in the first row
     let rows = [];
-    let columnCounter = 1; // Initialize column counter
 
     // ✅ Generate rows following 1, 3, 5, 7 pattern
     while (totalSlots > 0) {
@@ -183,18 +181,24 @@ function createSlots(cardCount) {
     }
 
     // ✅ Render the slots from bottom to top
-    rows.reverse().forEach(slotCount => {
-        const rowDiv = document.createElement("div");
-        rowDiv.classList.add("pyramid-row");
+    let columnCounter = 1; // Initialize column counter
+    rows.reverse().forEach((slotCount, rowIndex) => {
+        // Calculate the starting column number for this row
+        const startColumn = Math.floor((totalGeneratedSlots - slotCount) / 2) + 1;
 
         for (let i = 0; i < slotCount; i++) {
             const slot = document.createElement("div");
             slot.classList.add("slot");
-            slot.dataset.column = columnCounter++; // Assign column value starting from 1
-            rowDiv.appendChild(slot);
-        }
 
-        slotContainer.appendChild(rowDiv);
+            // Assign the column number based on the index in the row
+            slot.dataset.column = startColumn + i; // Column numbers start from the calculated start column
+
+            // Set the grid column and row for the slot
+            slot.style.gridColumn = startColumn + i;
+            slot.style.gridRow = rowIndex + 1;
+
+            slotContainer.appendChild(slot);
+        }
     });
 
     attachSlotEventListeners(); // ✅ Ensure drag & drop works
@@ -319,39 +323,39 @@ document.addEventListener("DOMContentLoaded", function () {
             alert("Please select a Q-sort version before submitting.");
             return;
         }
-
+    
         const userName = prompt("Please enter your name:");
         if (!userName || userName.trim() === "") {
             alert("Name is required for submission.");
             return;
         }
-
+    
         const sortedData = [];
         const slots = document.querySelectorAll(".slot");
-
+    
         slots.forEach(slot => {
             if (slot.children.length > 0) {
                 sortedData.push({
-                    column: slot.dataset.column,  // ✅ Ensure column value is retrieved
-                    card: slot.children[0].textContent.trim() // ✅ Ensure only project name is stored
+                    column: slot.dataset.column,  // ✅ Record the column number
+                    card: slot.children[0].textContent.trim() // ✅ Record the card text
                 });
             }
         });
-
+    
         const unplacedCards = document.querySelectorAll("#card-container .card").length;
         if (unplacedCards > 0) {
             alert(`You must place all ${unplacedCards} cards before submitting.`);
             return;
         }
-
+    
         const submissionData = {
             name: userName.trim(),
             version: selectedVersion,
             sortedData: sortedData
         };
-
+    
         console.log("📤 Sending submission:", submissionData);  // ✅ Debugging output
-
+    
         fetch("http://localhost:3000/submit", {
             method: "POST",
             headers: { "Content-Type": "application/json" },

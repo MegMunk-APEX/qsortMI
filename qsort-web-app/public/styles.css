@@ -36,19 +36,13 @@ body {
 
 /* Slot container ensures inverted pyramid structure */
 #slot-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    display: grid;
+    grid-template-columns: repeat(9, 1fr); /* 9 columns for a structured pyramid */
+    justify-items: center;
+    gap: 10px; /* Space between slots */
     padding: 20px;
-    gap: 8px;
-}
-
-/* Row Styling */
-.pyramid-row {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    width: 100%;
+    max-width: 80vw; /* Prevent stretching */
+    margin: auto;
 }
 
 /* Slot Styling */
@@ -61,6 +55,11 @@ body {
     justify-content: center;
     border-radius: 10px;
     transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* Ensures each row is centered properly */
+.pyramid-row {
+    display: contents; /* Allows slots to sit in the grid properly */
 }
 
 /* ✅ Hover effect for slots */
